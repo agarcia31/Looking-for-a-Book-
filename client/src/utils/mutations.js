@@ -1,42 +1,61 @@
-import axios from 'axios';
+import { gql } from '@apollo/client';
 
-export const createUserMutation = async (userData) => {
-  const response = await axios.post('/api/users', userData, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+export const LOGIN_USER = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user {
+        _id
+        username
+      }
+    }
+  }
+`;
 
-  return response.data;
-};
+export const ADD_USER = gql`
+  mutation addUser($username: String!, $email: String!, $password: String!) {
+    addUser(username: $username, email: $email, password: $password) {
+      token
+      user {
+        _id
+        username
+      }
+    }
+  }
+`;
 
-export const loginUserMutation = async (userData) => {
-  const response = await axios.post('/api/users/login', userData, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+export const SAVE_BOOK = gql`
+  mutation saveBook($bookData: BookInput!) {
+    saveBook(bookData: $bookData) {
+      _id
+      username
+      email
+      savedBooks {
+        bookId
+        authors
+        description
+        image
+        link
+        title
+      }
+    }
+  }
+`;
 
-  return response.data;
-};
-
-export const saveBookMutation = async (bookData, token) => {
-  const response = await axios.put('/api/users', bookData, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
-};
-
-export const deleteBookMutation = async (bookId, token) => {
-  const response = await axios.delete(`/api/users/books/${bookId}`, {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
-};
+export const DELETE_BOOK = gql`
+ mutation deleteBook($bookId: ID!) {
+  deleteBook(bookId: $bookId){
+    _id
+    username
+    email
+    savedBooks {
+      bookId
+      authors
+      description
+      image
+      link
+      title
+    }
+  }
+ }
+`;
